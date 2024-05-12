@@ -5,7 +5,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-na
 
 type Props = {
   title: string;
-  content: string;
+  children: React.ReactNode;
 };
 
 const Accordion = (props: Props) => {
@@ -57,19 +57,7 @@ const Accordion = (props: Props) => {
           ]}
         />
       </View>
-      <Collapsible collapsed={isCollapsed}>
-        <Text
-          style={{
-            fontFamily: "Manrope_400Regular",
-            fontSize: 14,
-            lineHeight: 19.12,
-            letterSpacing: -0.3,
-            textAlign: "left",
-          }}
-        >
-          {props.content}
-        </Text>
-      </Collapsible>
+      <Collapsible collapsed={isCollapsed}>{props.children}</Collapsible>
     </Pressable>
   );
 };

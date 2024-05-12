@@ -45,6 +45,33 @@ const colorVariants = [
   },
 ];
 
+const sizeProperties = [
+  {
+    name: "Width",
+    value: "70 cm",
+  },
+  {
+    name: "Depth",
+    value: "73 cm",
+  },
+  {
+    name: "Height",
+    value: "75 cm",
+  },
+  {
+    name: "Seat Width",
+    value: "57 cm",
+  },
+  {
+    name: "Seat Depth",
+    value: "46 cm",
+  },
+  {
+    name: "Seat Height",
+    value: "43 cm",
+  },
+];
+
 export default function TabOneScreen() {
   const [selectedVariant, setSelectedVariant] = React.useState(colorVariants[0]);
   const [isCollapsed, setIsCollapsed] = React.useState(true);
@@ -265,10 +292,76 @@ export default function TabOneScreen() {
               padding: 16,
             }}
           >
-            <Accordion
-              title="Product Description"
-              content="Choose a stylish dark color or brighten up your home with colorful sarongs. The EKERÖ armchair has a sleek and modern look with two sides that meet at the back – and a waist support for added comfort!"
-            />
+            <Accordion title="Product Description">
+              <Text
+                style={{
+                  fontFamily: "Manrope_400Regular",
+                  fontSize: 14,
+                  lineHeight: 19.12,
+                  letterSpacing: -0.3,
+                  textAlign: "left",
+                }}
+              >
+                Choose a stylish dark color or brighten up your home with colorful sarongs. The
+                EKERÖ armchair has a sleek and modern look with two sides that meet at the back –
+                and a waist support for added comfort!
+              </Text>
+            </Accordion>
+          </View>
+          <View
+            style={{
+              borderBottomColor: "#E0E0E0",
+              borderBottomWidth: 1,
+            }}
+          />
+          <View
+            style={{
+              padding: 16,
+            }}
+          >
+            <Accordion title="Size">
+              <View
+                style={{
+                  gap: 8,
+                }}
+              >
+                {sizeProperties.map((size, index) => (
+                  <>
+                    <View
+                      key={index}
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "Manrope_500Medium",
+                          fontSize: 14,
+                        }}
+                      >
+                        {size.name}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: "Manrope_500Medium",
+                          fontSize: 14,
+                          textAlign: "right",
+                        }}
+                      >
+                        {size.value}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        borderBottomColor: "#E0E0E0",
+                        borderBottomWidth: index === sizeProperties.length - 1 ? 0 : 1,
+                      }}
+                    />
+                  </>
+                ))}
+              </View>
+            </Accordion>
           </View>
         </View>
       </SafeAreaView>
