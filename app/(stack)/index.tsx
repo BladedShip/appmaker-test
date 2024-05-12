@@ -3,8 +3,15 @@ import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderCarousel from "./_components/HeaderCarousel";
 import { ScrollView } from "react-native-gesture-handler";
-import Collapsible from "react-native-collapsible";
 import Accordion from "./_components/Accordion";
+import { Link } from "expo-router";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  Easing,
+  withTiming,
+} from "react-native-reanimated";
+import { FlashList } from "@shopify/flash-list";
 
 const productImages = [
   {
@@ -72,9 +79,65 @@ const sizeProperties = [
   },
 ];
 
+const frequentlyBought = [
+  {
+    id: 1,
+    image: require("../../assets/images/carousel-1.png"),
+    name: "EKERÖ",
+    discount: "45% OFF",
+    price: "$230.00",
+    ogPrice: "$512.58",
+    rating: 4.9,
+    reviews: 256,
+  },
+  {
+    id: 2,
+    image: require("../../assets/images/carousel-2.png"),
+    name: "STRANDMON",
+    discount: "45% OFF",
+    price: "$274.13",
+    ogPrice: "$856.60",
+    rating: 4.9,
+    reviews: 256,
+  },
+  {
+    id: 3,
+    image: require("../../assets/images/carousel-3.png"),
+    name: "PLATTLÄNS",
+    discount: "45% OFF",
+    price: "$24.99",
+    ogPrice: "$69.99",
+    rating: 4.9,
+    reviews: 256,
+  },
+  {
+    id: 4,
+    image: require("../../assets/images/carousel-4.png"),
+    name: "MALM",
+    discount: "45% OFF",
+    price: "$50.99",
+    ogPrice: "$69.99",
+    rating: 4.9,
+    reviews: 256,
+  },
+];
+
 export default function TabOneScreen() {
   const [selectedVariant, setSelectedVariant] = React.useState(colorVariants[0]);
-  const [isCollapsed, setIsCollapsed] = React.useState(true);
+  const [liked, setLiked] = React.useState(false);
+
+  const scale = useSharedValue(1);
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
+  const onPress = () => {
+    scale.value = withTiming(1.2, { duration: 200, easing: Easing.ease }, () => {
+      scale.value = withTiming(1, { duration: 200, easing: Easing.ease });
+    });
+    setLiked(!liked);
+  };
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView
@@ -314,6 +377,7 @@ export default function TabOneScreen() {
               borderBottomWidth: 1,
             }}
           />
+          {/* Size Accordion */}
           <View
             style={{
               padding: 16,
@@ -360,9 +424,247 @@ export default function TabOneScreen() {
                     />
                   </>
                 ))}
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/schematic.png")}
+                    style={{
+                      width: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </View>
               </View>
             </Accordion>
           </View>
+          {/* Frequently Bought Section */}
+          <View
+            style={{
+              gap: 16,
+            }}
+          >
+            <View
+              style={{
+                padding: 16,
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Manrope_700Bold",
+                  fontSize: 20,
+                  textAlign: "left",
+                }}
+              >
+                Frequently bought
+              </Text>
+
+              <Link href="/more">
+                <Text
+                  style={{
+                    fontFamily: "Manrope_400Regular",
+                    fontSize: 14,
+                    color: "#156651",
+                    textAlign: "right",
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  See More
+                </Text>
+              </Link>
+            </View>
+            <View
+              style={{
+                shadowColor: "#0000001A",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 1,
+                shadowRadius: 24,
+                elevation: 2,
+                paddingBottom: 32,
+              }}
+            >
+              <FlashList
+                contentContainerStyle={{
+                  paddingHorizontal: 8,
+                }}
+                data={frequentlyBought}
+                horizontal
+                renderItem={({ item }) => (
+                  <View
+                    style={{
+                      padding: 16,
+                      borderRadius: 14,
+                      gap: 10,
+                      backgroundColor: "white",
+                      marginHorizontal: 8,
+                    }}
+                  >
+                    <View
+                      style={{
+                        position: "relative",
+                        width: 120,
+                        height: 120,
+                      }}
+                    >
+                      <Image
+                        source={item.image}
+                        style={{
+                          width: 120,
+                          height: 120,
+                          borderRadius: 10,
+                        }}
+                      />
+                      <View
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          backgroundColor: "#e14949",
+                          borderBottomRightRadius: 10,
+                          borderTopLeftRadius: 10,
+                          paddingHorizontal: 6,
+                          paddingVertical: 3,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 10,
+                            fontFamily: "Manrope_700Bold",
+                          }}
+                        >
+                          {item.discount}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        gap: 4,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "Manrope_400Regular",
+                          fontSize: 14,
+                          textAlign: "left",
+                        }}
+                      >
+                        {item.name}
+                      </Text>
+                      <View>
+                        <Text
+                          style={{
+                            fontFamily: "Manrope_700Bold",
+                            fontSize: 20,
+                            textAlign: "left",
+                          }}
+                        >
+                          {item.price}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: "Manrope_400Regular",
+                            fontSize: 12,
+                            textAlign: "left",
+                            textDecorationLine: "line-through",
+                            color: "#0000004D",
+                          }}
+                        >
+                          {item.ogPrice}
+                        </Text>
+                      </View>
+                      <Text>
+                        <Image
+                          source={require("../../assets/images/star.png")}
+                          style={{
+                            width: 18,
+                            height: 18,
+                          }}
+                        />
+                        <Text
+                          style={{
+                            fontFamily: "Manrope_400Regular",
+                            fontSize: 12,
+                            textAlign: "left",
+                            marginTop: 2,
+                          }}
+                        >{` ${item.rating} (${item.reviews})`}</Text>
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                estimatedItemSize={5}
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            borderTopRightRadius: 14,
+            borderTopLeftRadius: 14,
+            backgroundColor: "white",
+            marginTop: -16,
+            flexDirection: "row",
+          }}
+        >
+          <Pressable
+            style={{
+              height: 44,
+              width: 44,
+              borderRadius: 8,
+              borderWidth: 1,
+              borderColor: "#156651",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={onPress}
+          >
+            <Animated.Image
+              source={
+                liked
+                  ? require("../../assets/images/liked.png")
+                  : require("../../assets/images/unliked.png")
+              }
+              style={[
+                {
+                  width: 20,
+                  height: 20,
+                },
+                animatedStyles,
+              ]}
+            />
+          </Pressable>
+          <Pressable
+            style={{
+              flex: 1,
+              height: 44,
+              borderRadius: 8,
+              backgroundColor: "#156651",
+              justifyContent: "center",
+              alignItems: "center",
+              marginLeft: 16,
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontFamily: "Manrope_700Bold",
+                fontSize: 16,
+              }}
+            >
+              Add to Cart
+            </Text>
+          </Pressable>
         </View>
       </SafeAreaView>
     </ScrollView>
